@@ -54,6 +54,24 @@ pnpm install
 pnpm start
 ```
 
+# docker部署
+1. 按照本部部署方式，拉取工程并修改.env
+2. 构建本地镜像
+```
+cd coze2openai
+docker build -t coze2openai .
+```
+3. 启动容器
+```
+docker run -d -p 3000:3000   -v "$PWD/.env:/app/.env"   coze
+```
+4. 浏览器访问http://localhost:3000 提示如下信息即表示正常
+```
+Coze2OpenAI
+Congratulations! Your project has been successfully deployed.
+```
+
+
 # 用法
 1. OpenAI 三方客户端
 
@@ -80,6 +98,28 @@ const response = await fetch('http://localhost:3000/v1/chat/completions', {
 const data = await response.json();
 console.log(data);
 ```
+3. shell调用
+```
+curl --location 'http://localhost:3000/v1/chat/completions' --header 'Content-Type: application/json' --header 'Authorization: Bearer pat_key' --data '{
+     "model": "gpt-4",
+     "messages": [{"role": "user", "content": "你好!"}],
+     "stream": false
+   }'
+```
+4. 增加到new_api等
+渠道选择自定义渠道
+base url填写http://localhost:3000/v1/chat/completions
+分组随意，因为实际是通过.env控制的
+
+调用测试
+```
+curl --location 'http://localhost:9301/v1/chat/completions' --header 'Content-Type: application/json' --header 'Authorization: Bearer sk-B8scKkvhaUKwVEXo09C2B23dF1Ed4f688243F2Df8f26F7B8' --data '{
+     "model": "gpt-4",
+     "messages": [{"role": "user", "content": "你好!"}],
+     "stream": false
+   }'
+```
+
 # 环境变量
 该项目提供了一些额外的配置项，通过环境变量设置：
 
@@ -87,7 +127,7 @@ console.log(data);
 | -------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `BOT_ID`     | Yes      | 机器人的 ID。从 Coze 中机器人的开发页面 URL 获取它。 bot参数后面的数字是bot id.| `73428668*****`|
 | `BOT_CONFIG`     | No      | 配置模型和机器人ID的对应关系，实现在客户端切换模型来调用不同的机器人的效果。如果调用不在配置文件的模型，则走默认的BOT_ID| `{"model_name_1": "bot_id_1", "model_name_2": "bot_id_2", "model_name_3": "bot_id_3"}`|
-| `COZE_API_BASE`     | No      | 选择coze.com或者coze.cn| `api.coze.com, api.coze.cn`|
+| `COZE_API_BASE`     | No      | 选择coze.com或者coze.cn| `api.coze.com, api.coze.cn` 默认|
 
 
 # 路线图
