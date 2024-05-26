@@ -41,8 +41,7 @@ def chat_completions():
         data = g.data
         messages = data.get("messages", [])
         model = data.get("model")
-        chat_history = [{"role": message["role"], "content": message["content"], "content_type": "text"} for message in
-                        messages[:-1]]
+        chat_history = [{"role": message["role"], "content": message["content"], "content_type": "text"} for message in messages[:-1] if message["role"] == "assistant"]
         last_message = messages[-1]
         query_string = handle_last_message_v2(last_message)
         # logging.info(f"Query string: {query_string}")
@@ -55,7 +54,7 @@ def chat_completions():
             "conversation_id": "",
             "user": "apiuser",
             "bot_id": bot_id,
-            "chat_history": chat_history,
+            # "chat_history": chat_history,
             "draft_mode": True
         }
 
@@ -66,7 +65,7 @@ def chat_completions():
         }
         logging.info(f"Request to Coze API: {coze_api_url}")
         logging.info(f"Request bot id : {bot_id}")
-        # logging.info(f"Request body: {request_body}")
+        logging.info(f"Request body: {request_body}")
 
         if stream:
             return handle_stream_response(coze_api_url, headers, request_body, model)
