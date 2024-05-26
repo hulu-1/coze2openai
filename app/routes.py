@@ -65,7 +65,7 @@ def chat_completions():
         }
         logging.info(f"Request to Coze API: {coze_api_url}")
         logging.info(f"Request bot id : {bot_id}")
-        logging.info(f"Request body: {request_body}")
+        # logging.info(f"Request body: {request_body}")
 
         if stream:
             return handle_stream_response(coze_api_url, headers, request_body, model)
