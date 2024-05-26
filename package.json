@@ -2,11 +2,11 @@
   "name": "coze2openai",
   "version": "1.0.0",
   "description": "turn coze api into openai",
-  "main": "app.js",
+  "main": "app.py",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.py"
   },
   "keywords": [],
   "author": "fatwang2",

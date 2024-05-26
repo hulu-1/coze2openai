@@ -1,114 +1,74 @@
-## C2O
-**English** · [中文](README_CN.md) 
+# 用户手册
 
-**Use Coze on your favorite OpenAI client.**
+## 情况
+- coze.cn [目前API免费有限额](https://www.coze.cn/docs/developer_guides/coze_api_overview)
+- coze.com [目前每个账号额度100](https://www.coze.com/token)
 
-This project converts the Coze API to the OpenAI API format, giving you access to [Coze](https://www.coze.com) LLMs, knowledge base, plugins, and workflows within your preferred OpenAI clients. 
 
-## Features
-- Convert Coze API into an OpenAI API
-- Support streaming and blocking
-- Supports multi-bot switching
+## 前置条件
+- 注册COZE
+- [申请API 得到API_KEY ](https://www.coze.cn/open)
+- 创建COZE bot
+- 发布bot到API
 
-## Preparation
-1. Register with [coze.com](https://www.coze.com) or [coze.cn](https://www.coze.cn)and obtain your API token
-![cozeapitoken](pictures/token.png)
+# 项目
 
-2. Create your bot and publish it to the API
-![cozeapi](pictures/api.png)
-
-3. Obtain the bot's ID,the number after the bot parameter, and configure it as an environment variable
-```bash
-https://www.coze.com/space/73428668341****/bot/73428668*****
+## 结构
+```textyour_project/
+├── Dockerfile
+├── requirements.txt
+├── run.py
+└── app/
+    ├── __init__.py
+    └── other_module.py
 ```
 
-## Deployment
-### Zeabur
-[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/BZ515Z?referralCode=fatwang2)
 
-### Vercel
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fatwang2/coze2openai&env=BOT_ID&envDescription=COZE_BOT_ID)
-
-**Note:** Vercel's serverless functions have a 10-second timeout limit.
-
-### Railway
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/yM5tQL?referralCode=mDim7U)
-
-
-
-### Local Deployment
-1. Set the environment variable on `.env` file
-```bash
-BOT_ID=xxxx
+## 环境变量
+```text
+   BOT_ID= xxxxx
+   COZE_API_BASE=api.coze.cn
 ```
 
-2. Install dependencies 
-```bash
-pnpm install
+## model
+
+```text 
+随便填，最终跟是走的你COZE里bot选择的
 ```
 
-3. Run the project
-```bash
-pnpm start
-```
+##  效果
 
-## Usage
-1. OpenAI Clients
+### chat
 
-![botgem](pictures/usage.png)
-
-2. Code
-
-```JavaScript
-const response = await fetch('http://localhost:3000/v1/chat/completions', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer YOUR_COZE_API_KEY',
-  },
-  body: JSON.stringify({
-    model: 'model_name',
-    messages: [
-      { role: 'system', content: 'You are a helpful assistant.' },
-      { role: 'user', content: 'Hello, how are you?' },
+```text
+curl --location --request POST 'http://127.0.0.1:3000/v1/chat/completions' \
+--header 'Authorization: Bearer api key' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "model": "GPT-4o",
+    "messages": [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "你是谁呢"
+                }
+            ]
+        }
     ],
-  }),
-});
-
-const data = await response.json();
-console.log(data);
+    "max_tokens": 300,
+    "stream":false
+}'
 ```
-## Environment Variable
-This project provides some additional configuration items set with environment variables:
 
-| Environment Variable | Required | Description                                                                                                                                                               | Example                                                                                                              |
-| -------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `BOT_ID`     | Yes      | The ID of the bot. Obtain it from the Develop page URL of your bot in Coze. The number after the bot parameter is the bot ID.| `73428668*****`|
-| `BOT_CONFIG`     | No      | Configure different models to correspond to different bot ids to enable fast bot switching on the client side. Models that are not included will request the default BOT_ID | `{"model_name_1": "bot_id_1", "model_name_2": "bot_id_2", "model_name_3": "bot_id_3"}`|
-| `COZE_API_BASE`     | No      | Choose coze.com or coze.cn | `api.coze.com, api.coze.cn`|
+### LOBE chat
+![lobechat.png](doc%2Flobechat.png)
 
-## Roadmap
-**Coming Soon**
-*   Image support
-*   Audio-to-text
-*   Text-to-audio
-*   Docker support
+# 部署
 
-**Available Now**
-*   Coze.cn
-*   Multi-bot switching
-*   Workflow, Plugins, Knowledge base
-*   Continuous dialogue with the history of chat
-*   Zeabur & Vercel & Railway deployment
-*   Streaming & Blocking
+## docker
 
-## Contact
-Feel free to reach out for any questions or feedback
-
-[X](https://sum4all.site/twitter)\
-[telegram](https://sum4all.site/telegram)
-
-<a href="https://www.buymeacoffee.com/fatwang2" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
-
-## License
-This project is licensed under the MIT License.
+```bash
+docker run --name coze2api --restart=always -d -p 3000:3000 -e BOT_ID={{bot_id}}  hulu365/coze2api:latest
+```
