@@ -72,3 +72,6 @@ curl --location --request POST 'http://127.0.0.1:3000/v1/chat/completions' \
 ```bash
 docker run --name coze2api --restart=always -d -p 3000:3000 -e BOT_ID={{bot_id}}  hulu365/coze2api:latest
 ```
+
+
+This project is tested with BrowserStack.
